@@ -1,0 +1,8 @@
+           aaaa         
+            aa          
+           a            
+                        
+ a a      bb    cc      
+  aa      bbb  cccc     
+  aa      bb     c      
+   a                    
