@@ -101,7 +101,7 @@ public class Main
 	 */
 	public static boolean isAdjacent(ArrayList<ArrayList<Character>> list, int row, int col, int row2, int col2)
 	{
-		
+
 		// 8 situations
 		if (row >  0 && col > 0)
 		{
@@ -117,7 +117,7 @@ public class Main
 					return true;
 		}
 
-		if (row < list.size() && col > 0)
+		if (row + 1 < list.size() && col > 0)
 		{
 			if (row2 == row + 1 && col2 == col - 1)
 				if (list.get(row + 1).get(col - 1) == '*')
@@ -131,28 +131,28 @@ public class Main
 					return true;
 		}
 
-		if (row < list.size())
+		if (row + 1 < list.size())
 		{
 			if (row2 == row + 1 && col2 == col)
 				if (list.get(row + 1).get(col) == '*')
 					return true;
 		}
 
-		if (row > 0 && col < list.get(row).size() )
+		if (row > 0 && col + 1 < list.get(row).size() )
 		{
 			if (row2 == row - 1 && col2 == col + 1)
 				if (list.get(row - 1).get(col + 1) == '*')
 					return true;
 		}
 
-		if (col < list.get(row).size())
+		if (col + 1 < list.get(row).size())
 		{
 			if (row2 == row && col2 == col + 1)
 				if (list.get(row).get(col + 1) == '*')
 					return true;
 		}
 
-		if (row < list.size() && col < list.get(row).size())
+		if (row + 1 < list.size() && col + 1 < list.get(row).size())
 		{
 			if (row2 == row + 1 && col2 == col + 1)
 				if (list.get(row + 1).get(col + 1) == '*')
@@ -213,75 +213,220 @@ public class Main
 		//		return false;
 	}
 
-/**
- * Finds the next adjacent character in the current shape based off the given params
- * @param list = the 2d array that holds the shapes
- * @param row = the row of the character already known to be in the shape
- * @param col = the col of the character already known to be in the shape
- * @return
- * 				= (row, col) of the adjacent character in the current shape
- * 				= null if no adjacent characters in the current shape
- */
-	public static Point findNextAdjacent(ArrayList<ArrayList<Character>> list, int row, int col)
+	/**
+	 * Finds the next adjacent character in the current shape based off the given params
+	 * @param list = the 2d array that holds the shapes
+	 * @param row = the row of the character already known to be in the shape
+	 * @param col = the col of the character already known to be in the shape
+	 * @return
+	 * 				= (row, col) of the adjacent character in the current shape
+	 * 				= null if no adjacent characters in the current shape
+	 */
+	public static Point findNextAdjacent(ArrayList<ArrayList<Character>> list, int row, int col, ArrayList<Point> adjacentPoints)
 	{
+		//ArrayList<Point> adjacentPoints = null;
+
+		
 		// 8 situations
 		if (row >  0 && col > 0)
 		{
 			if (isAdjacent(list, row, col, row - 1, col - 1) == true 
 					&& Character.isLetter(list.get(row - 1).get(col - 1)) == false)
+			{
+				adjacentPoints.add(new Point(row - 1, col - 1));
 				return new Point(row - 1, col - 1);
+			}
 		}
 
 		if (col > 0)
 		{
 			if (isAdjacent(list, row, col, row, col - 1) == true
 					&& Character.isLetter(list.get(row).get(col - 1)) == false) 
+			{
+				adjacentPoints.add(new Point(row, col - 1));
 				return new Point(row, col - 1);
+			}
 		}
 
 		if (row < list.size() && col > 0)
 		{
 			if (isAdjacent(list, row, col, row + 1, col - 1) == true
 					&& Character.isLetter(list.get(row + 1).get(col - 1)) == false) 
+			{
+				adjacentPoints.add(new Point(row + 1, col - 1));
 				return new Point(row + 1, col - 1);
+			}
 		}
 
 		if (row > 0)
 		{
 			if (isAdjacent(list, row, col, row - 1, col) == true
 					&& Character.isLetter(list.get(row - 1).get(col)) == false)
+			{
+				adjacentPoints.add(new Point(row - 1, col));
 				return new Point(row - 1, col);
+			}
 		}
 
 		if (row < list.size())
 		{
 			if (isAdjacent(list, row, col, row + 1, col) == true
 					&& Character.isLetter(list.get(row + 1).get(col)) == false)
+			{
+				adjacentPoints.add(new Point(row + 1, col));
 				return new Point(row + 1, col);
+			}
 		}
 
 		if (row > 0 && col < list.get(row).size() )
 		{
 			if (isAdjacent(list, row, col, row - 1, col + 1) == true
 					&& Character.isLetter(list.get(row - 1).get(col + 1)) == false)
+			{
+				adjacentPoints.add(new Point(row - 1, col + 1));
 				return new Point(row - 1, col + 1);
+			}
 		}
 
 		if (col < list.get(row).size())
 		{
 			if (isAdjacent(list, row, col, row, col + 1) == true 
 					&& Character.isLetter(list.get(row).get(col + 1)) == false)
+			{
+				adjacentPoints.add(new Point(row, col + 1));
 				return new Point(row, col + 1);
+			}
 		}
 
 		if (row < list.size() && col < list.get(row).size())
 		{
 			if (isAdjacent(list, row, col, row + 1, col + 1) == true 
 					&& Character.isLetter(list.get(row + 1).get(col + 1)) == false)
+			{
+				adjacentPoints.add(new Point(row + 1, col + 1));
 				return new Point(row + 1, col + 1);
+			}
 		}
 
+		if (adjacentPoints.isEmpty() == false)
+		{
+			int x = 5;
+			x = 5 + 1;
+		}
+			
 		return null;
+	}
+
+	/**
+	 * Finds the next adjacent character in the current shape based off the given params
+	 * @param list = the 2d array that holds the shapes
+	 * @param row = the row of the character already known to be in the shape
+	 * @param col = the col of the character already known to be in the shape
+	 * @return
+	 * 				= (row, col) of the adjacent character in the current shape
+	 * 				= null if no adjacent characters in the current shape
+	 */
+	public static void findAllAdjacent(ArrayList<ArrayList<Character>> list, int row, int col, char c)
+	{
+		//ArrayList<Point> adjacentPoints = new ArrayList<Point>();
+
+		
+		// 8 situations
+		if (row >  0 && col > 0)
+		{
+			if (isAdjacent(list, row, col, row - 1, col - 1) == true 
+					&& Character.isLetter(list.get(row - 1).get(col - 1)) == false)
+			{
+			//	adjacentPoints.add(new Point(row - 1, col - 1));
+				list.get(row - 1).set(col - 1, c); 
+				findAllAdjacent(list, row -1, col - 1, c);
+			}
+		}
+
+		if (col > 0)
+		{
+			if (isAdjacent(list, row, col, row, col - 1) == true
+					&& Character.isLetter(list.get(row).get(col - 1)) == false) 
+			{
+				//adjacentPoints.add(new Point(row, col - 1));
+				list.get(row).set(col - 1, c); 
+				findAllAdjacent(list, row, col - 1, c);
+			}
+		}
+
+		if (row < list.size() && col > 0)
+		{
+			if (isAdjacent(list, row, col, row + 1, col - 1) == true
+					&& Character.isLetter(list.get(row + 1).get(col - 1)) == false) 
+			{
+				//adjacentPoints.add(new Point(row + 1, col - 1));
+				list.get(row + 1).set(col - 1, c); 
+				findAllAdjacent(list, row + 1, col - 1, c);
+			}
+		}
+
+		if (row > 0)
+		{
+			if (isAdjacent(list, row, col, row - 1, col) == true
+					&& Character.isLetter(list.get(row - 1).get(col)) == false)
+			{
+				//adjacentPoints.add(new Point(row - 1, col));
+				list.get(row - 1).set(col, c); 
+				findAllAdjacent(list, row - 1, col, c);
+			}
+		}
+
+		if (row < list.size())
+		{
+			if (isAdjacent(list, row, col, row + 1, col) == true
+					&& Character.isLetter(list.get(row + 1).get(col)) == false)
+			{
+				//adjacentPoints.add(new Point(row + 1, col));
+				list.get(row + 1).set(col, c); 
+				findAllAdjacent(list, row + 1, col, c);
+			}
+		}
+
+		if (row > 0 && col < list.get(row).size() )
+		{
+			if (isAdjacent(list, row, col, row - 1, col + 1) == true
+					&& Character.isLetter(list.get(row - 1).get(col + 1)) == false)
+			{
+				//adjacentPoints.add(new Point(row - 1, col + 1));
+				list.get(row - 1).set(col + 1, c); 
+				findAllAdjacent(list, row - 1, col + 1, c);
+			}
+		}
+
+		if (col < list.get(row).size())
+		{
+			if (isAdjacent(list, row, col, row, col + 1) == true 
+					&& Character.isLetter(list.get(row).get(col + 1)) == false)
+			{
+				//adjacentPoints.add(new Point(row, col + 1));
+				list.get(row).set(col + 1, c); 
+				findAllAdjacent(list, row, col + 1, c);
+			}
+		}
+
+		if (row < list.size() && col < list.get(row).size())
+		{
+			if (isAdjacent(list, row, col, row + 1, col + 1) == true 
+					&& Character.isLetter(list.get(row + 1).get(col + 1)) == false)
+			{
+				//adjacentPoints.add(new Point(row + 1, col + 1));
+				list.get(row + 1).set(col + 1, c); 
+				findAllAdjacent(list, row + 1, col + 1, c);
+			}
+		}
+
+//		if (adjacentPoints.isEmpty() == false)
+//		{
+//			return adjacentPoints;
+//		}
+//			
+//		else
+//			return null;
 	}
 
 
@@ -293,25 +438,25 @@ public class Main
 	 * @param col = the y value of the point in the 2d array
 	 * @param c = the character to change the asterisk to
 	 */
-	public static void defineShape(ArrayList<ArrayList<Character>> list, int row, int col, char c)
+	public static void defineShape(ArrayList<ArrayList<Character>> list, int row, int col, char c, ArrayList<Point> adjacentPoints)
 	{
 		// recursion to find every adjacent point and then use the letters to 
 		// define the shape and when you recurse all the way up choose another letter 
 		// and skip to the next place with an asterisk
-		
+
 		if (list.get(row).get(col) == '*')
 			list.get(row).set(col, c); 
-		
+
 		// returns the coordinates of the next adjacent spot
-		Point temp = findNextAdjacent(list, row, col);
-		
+		Point temp = findNextAdjacent(list, row, col, adjacentPoints);
+
 		// no more adjacent spots (base case)
 		if (temp == null)
 			return;
-		
+
 		// (general case)
-			defineShape(list, temp.x, temp.y, c);
-		
+		defineShape(list, temp.x, temp.y, c, adjacentPoints);
+
 	}
 
 
@@ -392,6 +537,7 @@ public class Main
 		//ArrayList<ArrayList<Character>> decodedShapes = new ArrayList<ArrayList<Character>>();
 		char[] alphaPattern = new char[26];
 		int letter = 0;
+		ArrayList<Point> adjacentPoints = new ArrayList<Point>();
 
 		// populates the char array with the alphabet chars
 		for (char ch = 'a'; ch <= 'z'; ++ch)
@@ -425,10 +571,14 @@ public class Main
 					// and then start back at the end of the first line you were at
 					// when you encountered the shape
 					//encodedShapes.get(iRow).set(iCol, alphaPattern[0]);
+
+					//defineShape(encodedShapes, iRow, iCol, alphaPattern[letter], adjacentPoints);
 					
-					defineShape(encodedShapes, iRow, iCol, alphaPattern[letter]);
+					findAllAdjacent(encodedShapes, iRow, iCol, alphaPattern[letter]);
+					// update letter for shape and reset the adjacent points
 					letter++;
-				//	encodedShapes.get(iRow).set(iCol, '*');
+					adjacentPoints = null;
+					//	encodedShapes.get(iRow).set(iCol, '*');
 
 				}					
 			}
