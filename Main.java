@@ -19,9 +19,6 @@ public class Main
 		String temp = "";
 		int row = 0, 
 				col = 0;
-		ArrayList<Point> shape = new ArrayList<Point>();
-
-		//ArrayList<ArrayList<Character>> patternHolder = new ArrayList<ArrayList<Character>>();
 
 		try
 		{
@@ -40,12 +37,6 @@ public class Main
 
 					// populate the columns of the rows
 					patternHolder.get(row).add(col, temp.charAt(col));
-
-					// DONT NEED CUZ PLAN ON REPLACING THE * WITH LETTERS
-					// INSTEAD OF RECOPYING
-					//					// gets the points that make up the shape
-					//					if (temp.charAt(col) != 32)
-					//						shape.add(new Point(row, col));
 
 				}
 
@@ -172,7 +163,7 @@ public class Main
 	 */
 	public static void findAllAdjacent(ArrayList<ArrayList<Character>> list, int row, int col, char c)
 	{
-		
+
 		// 8 situations
 		if (row >  0 && col > 0)
 		{
@@ -255,6 +246,10 @@ public class Main
 		}
 	}
 
+	public static ArrayList<ArrayList<Character>> rotate90Degrees(ArrayList<ArrayList<Character>> oneShape)
+	{
+		return null;
+	}
 	/**
 	 * Generate all 8 permutations of the shape that we have found
 	 * @return the arrayList containing all the permutations
@@ -264,19 +259,98 @@ public class Main
 		ArrayList<ArrayList<ArrayList<Character>>> permutations 
 		=	new ArrayList<ArrayList<ArrayList<Character>>>();
 
-		//		// get points from the parameter
-		//		ArrayList<Point>
-		//		
-		//		// normal 
-		//		permutations.add(oneShape);
-		//		
-		//		// mirror x
-		//		
-		//		
-		//		// mirror y
-		//		
-		//		// mirror x and y
-		//		
+		ArrayList<ArrayList<Character>> temp = new ArrayList<ArrayList<Character>>();
+
+		// normal 
+		permutations.add(oneShape);
+
+		int imageRow = -1;
+		// mirror x
+		for (int row = oneShape.size() - 1; row >= 0; row--) 
+		{
+			// initialize row for image array
+			imageRow++;
+			temp.add(new ArrayList<Character>());
+
+			for (int column = 0; column < oneShape.get(row).size(); column++)
+			{
+				// get element at current row and column
+				char element = oneShape.get(row).get(column);
+
+				// assign element to the image array
+
+				temp.get(imageRow).add(column, element);
+
+				//				// increment the image array column counter
+				//				imageRow++;
+			}
+		}
+
+		// add mirror x and reset temp
+		permutations.add((ArrayList<ArrayList<Character>>) temp.clone());
+		temp.clear();
+
+		// mirror y
+		for (int row = 0; row < oneShape.size(); row++) 
+		{
+			// initialize column for image array
+			int imageColumn = 0;
+			temp.add(new ArrayList<Character>());
+
+			for (int column = oneShape.get(row).size() - 1; column >= 0; column--)
+			{
+				// get element at current row and column
+				char element = oneShape.get(row).get(column);
+
+				// assign element to the image array
+				//temp.add(new ArrayList<Character>());
+				temp.get(row).add(imageColumn, element);
+
+				// increment the image array column counter
+				imageColumn++;
+			}
+		}
+
+		// add mirror y and reset temp
+		permutations.add((ArrayList<ArrayList<Character>>) temp.clone());
+		temp.clear();
+
+
+		// mirror x and y
+		int imageRow2 = -1;
+		for (int row = oneShape.size() - 1; row >= 0; row--) 
+		{
+			// initialize column for image array
+			int imageColumn = 0;
+			imageRow2++;
+
+			temp.add(new ArrayList<Character>());
+
+			for (int column = oneShape.get(row).size() - 1; column >= 0; column--)
+			{
+				// get element at current row and column
+				char element = oneShape.get(row).get(column);
+
+				// assign element to the image array
+				//temp.add(new ArrayList<Character>());
+				temp.get(imageRow2).add(imageColumn, element);
+
+				// increment the image array column counter
+				imageColumn++;
+			}
+		}
+
+		// add mirror x,y and reset temp
+		permutations.add((ArrayList<ArrayList<Character>>) temp.clone());
+		temp.clear();
+
+		// test
+		for (int i = 0; i < permutations.size(); i++)
+		{
+			writeToConsole(permutations.get(i));
+		}
+
+
 		//		// normal 90
 		//		
 		//		// mirror x 90
@@ -288,7 +362,7 @@ public class Main
 		//		permutation 
 		//		permutations.add()
 
-		return null;
+		return temp;
 	}
 
 	/**
@@ -325,6 +399,23 @@ public class Main
 
 	}
 
+	// TEST METHOD
+	public static void writeToConsole(ArrayList<ArrayList<Character>> decodedShapes)
+	{
+		// write the correct letter to the shapes
+
+
+		for (int i = 0; i < decodedShapes.size(); i++)
+		{
+			for (int j = 0; j < decodedShapes.get(i).size(); j++)
+			{
+				System.out.print(decodedShapes.get(i).get(j));
+			}
+			System.out.printf("%n"); 
+		}
+
+	}
+
 	/**
 	 * Main method to run the program
 	 * @param args = necessary arguments to run the program
@@ -343,25 +434,32 @@ public class Main
 		// write the file contents to an Array List
 		populateArrList(encodedShapes);
 
-		// shape algorithm
-		for (int iRow = 0; iRow < encodedShapes.size(); iRow++)
-			for (int iCol = 0; iCol < encodedShapes.get(iRow).size(); iCol++)
-			{
-				if (encodedShapes.get(iRow).get(iCol) == '*')
-				{				
-					findAllAdjacent(encodedShapes, iRow, iCol, alphaPattern[letter]);
-					
-					// update letter for shape and reset the adjacent points
-					letter++;
-					
-					// reset the letter to 'a' because this is before we
-					// check for the permutations of the shapes
-					if (letter > 25)
-						letter = 0;
+		//		// shape algorithm
+		//		for (int iRow = 0; iRow < encodedShapes.size(); iRow++)
+		//			for (int iCol = 0; iCol < encodedShapes.get(iRow).size(); iCol++)
+		//			{
+		//				if (encodedShapes.get(iRow).get(iCol) == '*')
+		//				{				
+		//					findAllAdjacent(encodedShapes, iRow, iCol, alphaPattern[letter]);
+		//					
+		//					// update letter for shape and reset the adjacent points
+		//					letter++;
+		//					
+		//					// reset the letter to 'a' because this is before we
+		//					// check for the permutations of the shapes
+		//					if (letter > 25)
+		//						letter = 0;
+		//
+		//				}					
+		//			}
 
-				}					
-			}
-		
+		ArrayList<ArrayList<Character>> oneShape = new ArrayList<ArrayList<Character>>();
+
+		for (int i = 0; i < 3; i++)
+			oneShape.add(encodedShapes.get(i));
+
+		generatePermutations(oneShape);
+
 		// write to output file
 		// at this point encodedShapes is decoded
 		writeToFile(encodedShapes);
