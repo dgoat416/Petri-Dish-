@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.awt.Point;
 
@@ -155,6 +156,7 @@ public class Main
 
 	/**
 	 * Find all adjacent characters in the current shape based off the given params
+	 * and redefine the shape as the parameter c instead of the asterisk
 	 * @param list = the 2d array that holds the shapes
 	 * @param row = the row of the character already known to be in the shape
 	 * @param col = the col of the character already known to be in the shape
@@ -248,10 +250,32 @@ public class Main
 
 	public static ArrayList<ArrayList<Character>> rotate90Degrees(ArrayList<ArrayList<Character>> oneShape)
 	{
-		return null;
+		// rows of new matrix = columns of original matrix
+		    int rowsOfNewMatrix = oneShape.get(0).size(); 
+		 // cols of new matrix = rows of original matrix
+		    int colsOfNewMatrix = oneShape.size();  		   
+		    
+		    ArrayList<ArrayList<Character>> rotatedMatrix = new ArrayList<ArrayList<Character>>();
+		    
+		    
+		    for (int i = 0; i < colsOfNewMatrix; i++)
+		    {
+		    	for(int j = 0; j < rowsOfNewMatrix; j++)
+		    	{
+		    		if (i == 0)
+		    			rotatedMatrix.add(new ArrayList<Character>(Arrays.asList(new Character[colsOfNewMatrix])));
+				   // rotatedMatrix.get(j).add();
+		    		char c = oneShape.get(i).get(j);
+		    		rotatedMatrix.get(j).set(colsOfNewMatrix - (i + 1), c);
+		    	}
+		    }
+		
+		 
+		return rotatedMatrix;
 	}
 	/**
 	 * Generate all 8 permutations of the shape that we have found
+	 * @param oneShape = the 2d array of one shape from the text file
 	 * @return the arrayList containing all the permutations
 	 */
 	public static ArrayList<ArrayList<Character>> generatePermutations(ArrayList<ArrayList<Character>> oneShape)
@@ -263,6 +287,11 @@ public class Main
 
 		// normal 
 		permutations.add(oneShape);
+		// add 90 degree rotation of original
+		permutations.add(rotate90Degrees(oneShape));
+		
+		// reset temp
+		temp.clear();
 
 		int imageRow = -1;
 		// mirror x
@@ -278,16 +307,16 @@ public class Main
 				char element = oneShape.get(row).get(column);
 
 				// assign element to the image array
-
 				temp.get(imageRow).add(column, element);
 
-				//				// increment the image array column counter
-				//				imageRow++;
 			}
 		}
 
 		// add mirror x and reset temp
 		permutations.add((ArrayList<ArrayList<Character>>) temp.clone());
+		
+		// add 90 degree rotation of mirror x
+		permutations.add(rotate90Degrees(temp));
 		temp.clear();
 
 		// mirror y
@@ -303,7 +332,6 @@ public class Main
 				char element = oneShape.get(row).get(column);
 
 				// assign element to the image array
-				//temp.add(new ArrayList<Character>());
 				temp.get(row).add(imageColumn, element);
 
 				// increment the image array column counter
@@ -313,6 +341,9 @@ public class Main
 
 		// add mirror y and reset temp
 		permutations.add((ArrayList<ArrayList<Character>>) temp.clone());
+		
+		// add 90 degree rotation of mirror y
+		permutations.add(rotate90Degrees(temp));
 		temp.clear();
 
 
@@ -332,7 +363,6 @@ public class Main
 				char element = oneShape.get(row).get(column);
 
 				// assign element to the image array
-				//temp.add(new ArrayList<Character>());
 				temp.get(imageRow2).add(imageColumn, element);
 
 				// increment the image array column counter
@@ -342,29 +372,27 @@ public class Main
 
 		// add mirror x,y and reset temp
 		permutations.add((ArrayList<ArrayList<Character>>) temp.clone());
+		
+		// add 90 degree rotation of mirror x,y
+		permutations.add(rotate90Degrees(temp));
 		temp.clear();
 
 		// test
-		for (int i = 0; i < permutations.size(); i++)
-		{
-			writeToConsole(permutations.get(i));
-		}
-
-
-		//		// normal 90
-		//		
-		//		// mirror x 90
-		//		
-		//		// mirror y 90
-		//		
-		//		// mirror x and y 90
-		//		
-		//		permutation 
-		//		permutations.add()
-
+				for (int i = 0; i < permutations.size(); i++)
+				{
+					writeToConsole(permutations.get(i));
+					System.out.printf("%n%n"); 
+				}
+				
 		return temp;
 	}
 
+	
+	public boolean isSameShape(ArrayList<ArrayList<Character>> oneShape)
+	{
+		return false;
+	}
+	
 	/**
 	 * Write to output file
 	 * @param decodedShapes = the arrayList that holds what should be 
