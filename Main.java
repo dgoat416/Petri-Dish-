@@ -1,10 +1,10 @@
+import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.awt.Point;
 
 public class Main 
 {
@@ -44,12 +44,16 @@ public class Main
 				row++;
 
 			}
+
+			// close the scanner
+			read.close();
 		} 
 		catch (FileNotFoundException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 
 	}
 
@@ -79,6 +83,241 @@ public class Main
 
 	}
 
+	/**
+	 * Compares two points
+	 * @param p = another point object for comparison
+	 */
+	public static int compareTo(Point a, Point b)
+	{
+		// TODO Auto-generated method stub
+		if (a.x == b.x)
+		{
+			if (a.y == b.y)
+				return 0;
+			else if (a.y < b.y)
+				return -1;
+			else if (a.y > b.y)	
+				return 1;
+		}
+		else if (a.x < b.x )
+		{
+			return -1;
+			//			if (iPoint.y == p.y)
+			//				return -1;
+			//			else if (iPoint.y < p.y)
+			//				return -1;
+			//			else if (iPoint.y > p.y)	
+			//				return 1;
+		}
+
+		else if (a.x > b.x)
+			return 1;
+
+		// error
+		return -999;
+	}
+
+	public static void grabShape(ArrayList<ArrayList<Character>> list,  ArrayList<Point> points, int row, int col, char c)
+	{
+		// 8 situations
+		if (row >  0 && col > 0)
+		{
+			if (isAdjacent(list, row, col, row - 1, col - 1) == true 
+					&& Character.isLetter(list.get(row - 1).get(col - 1)) == false)
+			{
+				// store the point 
+				if (points.isEmpty() == true || compareTo(points.get(0), new Point(row - 1, col - 1)) == - 1 
+						||	compareTo(points.get(0), new Point(row - 1, col - 1)) == 0
+						|| points.isEmpty() == true)
+					points.add(new Point(row - 1, col - 1));
+
+				else if (compareTo(points.get(0), new Point(row - 1, col - 1)) == 1)
+					points.add(0, new Point(row -1, col - 1));
+
+				list.get(row - 1).set(col - 1, c); 
+				grabShape(list, points, row -1, col - 1, c);
+			}
+		}
+
+		if (col > 0)
+		{			
+			if (isAdjacent(list, row, col, row, col - 1) == true
+					&& Character.isLetter(list.get(row).get(col - 1)) == false) 
+			{
+				// store the point 
+				if (points.isEmpty() == true || compareTo(points.get(0), new Point(row, col - 1)) == - 1 
+						||	compareTo(points.get(0), new Point(row, col - 1)) == 0
+						|| points.isEmpty() == true)
+					points.add(new Point(row, col - 1));
+
+				else if (compareTo(points.get(0), new Point(row, col - 1)) == 1)
+					points.add(0, new Point(row, col - 1));
+
+				list.get(row).set(col - 1, c); 
+				grabShape(list, points, row, col - 1, c);
+			}
+		}
+
+		if (row < list.size() && col > 0)
+		{
+			if (isAdjacent(list, row, col, row + 1, col - 1) == true
+					&& Character.isLetter(list.get(row + 1).get(col - 1)) == false) 
+			{
+				// store the point 
+				if (points.isEmpty() == true || compareTo(points.get(0), new Point(row + 1, col - 1)) == - 1 
+						||	compareTo(points.get(0), new Point(row + 1, col - 1)) == 0
+						|| points.isEmpty() == true)
+					points.add(new Point(row + 1, col - 1));
+
+				else if (compareTo(points.get(0), new Point(row + 1, col - 1)) == 1)
+					points.add(0, new Point(row + 1, col - 1));
+
+				list.get(row + 1).set(col - 1, c); 
+				grabShape(list, points, row + 1, col - 1, c);
+			}
+		}
+
+		if (row > 0)
+		{
+			if (isAdjacent(list, row, col, row - 1, col) == true
+					&& Character.isLetter(list.get(row - 1).get(col)) == false)
+			{
+				// store the point 
+				if (points.isEmpty() == true || compareTo(points.get(0), new Point(row - 1, col)) == - 1 
+						||	compareTo(points.get(0), new Point(row - 1, col)) == 0
+						|| points.isEmpty() == true)
+					points.add(new Point(row - 1, col));
+
+				else if (compareTo(points.get(0), new Point(row - 1, col)) == 1)
+					points.add(0, new Point(row - 1, col));
+
+				list.get(row - 1).set(col, c); 
+				grabShape(list, points, row - 1, col, c);
+			}
+		}
+
+		if (row < list.size())
+		{
+			if (isAdjacent(list, row, col, row + 1, col) == true
+					&& Character.isLetter(list.get(row + 1).get(col)) == false)
+			{
+				// store the point 
+				if (points.isEmpty() == true || compareTo(points.get(0), new Point(row + 1, col)) == - 1 
+						||	compareTo(points.get(0), new Point(row + 1, col)) == 0
+						|| points.isEmpty() == true)
+					points.add(new Point(row + 1, col));
+
+				else if (compareTo(points.get(0), new Point(row + 1, col)) == 1)
+					points.add(0, new Point(row + 1, col));
+
+				list.get(row + 1).set(col, c); 
+				grabShape(list, points, row + 1, col, c);
+			}
+		}
+
+		if (row > 0 && col < list.get(row).size() )
+		{
+			if (isAdjacent(list, row, col, row - 1, col + 1) == true
+					&& Character.isLetter(list.get(row - 1).get(col + 1)) == false)
+			{
+				// store the point 
+				if (points.isEmpty() == true || compareTo(points.get(0), new Point(row - 1, col + 1)) == - 1 
+						||	compareTo(points.get(0), new Point(row - 1, col + 1)) == 0
+						|| points.isEmpty() == true)
+					points.add(new Point(row - 1, col + 1));
+
+				else if (compareTo(points.get(0), new Point(row - 1, col + 1)) == 1)
+					points.add(0, new Point(row - 1, col + 1));
+
+				list.get(row - 1).set(col + 1, c); 
+				grabShape(list, points, row - 1, col + 1, c);
+			}
+		}
+
+		if (col < list.get(row).size())
+		{
+			if (isAdjacent(list, row, col, row, col + 1) == true 
+					&& Character.isLetter(list.get(row).get(col + 1)) == false)
+			{				
+				// store the point 
+				if (points.isEmpty() == true || compareTo(points.get(0), new Point(row, col + 1)) == - 1 
+						||	compareTo(points.get(0), new Point(row, col + 1)) == 0
+						|| points.isEmpty() == true)
+					points.add(new Point(row, col + 1));
+
+				else if (compareTo(points.get(0), new Point(row, col + 1)) == 1)
+					points.add(0, new Point(row, col + 1));
+
+				list.get(row).set(col + 1, c); 
+				grabShape(list, points, row, col + 1, c);
+			}
+		}
+
+		if (row < list.size() && col < list.get(row).size())
+		{
+			if (isAdjacent(list, row, col, row + 1, col + 1) == true 
+					&& Character.isLetter(list.get(row + 1).get(col + 1)) == false)
+			{
+				// store the point 
+				if (points.isEmpty() == true || compareTo(points.get(0), new Point(row + 1, col + 1)) == - 1 
+						||	compareTo(points.get(0), new Point(row + 1, col + 1)) == 0
+						|| points.isEmpty() == true)
+					points.add(new Point(row + 1, col + 1));
+
+				else if (compareTo(points.get(0), new Point(row + 1, col + 1)) == 1)
+					points.add(0, new Point(row + 1, col + 1));
+
+				list.get(row + 1).set(col + 1, c); 
+				grabShape(list, points, row + 1, col + 1, c);
+			}
+		}
+
+	}
+
+/**
+ * Creates a matrix from the points given as parameters
+ * @param points
+ * 						= an arrayList of points 
+ * @return
+ * 				= a 2d arrayList representing the points 
+ */
+	public static ArrayList<ArrayList<Character>> createMatrix(final ArrayList<Point> points)
+	{
+		int originX = points.get(0).x;
+		int originY = points.get(0).y;
+		int currX = 0;
+		int currY = 0;
+
+		ArrayList<ArrayList<Character>> newMatrix = new ArrayList<ArrayList<Character>>();
+
+		for (int j = 0; j < points.size(); j++)
+		{
+			currX = Math.abs(points.get(j).x - originX);
+			currY = Math.abs(points.get(j).y - originY);
+
+			// add to matrix 
+			while (newMatrix.size() - 1 < currX)
+			{
+				// need more rows so make more rows
+				newMatrix.add(new ArrayList<Character>());
+			}
+
+			if (newMatrix.get(currX).size() - 1 < currY)
+			{
+				Character[] col = new Character[currY - newMatrix.get(currX).size()];
+				Arrays.fill(col, ' ');
+				newMatrix.get(currX).addAll(Arrays.asList(col));
+			}
+
+			// set the value of the point as an asterisk
+			newMatrix.get(currX).add(currY, '*');
+		}
+
+		writeToConsole(newMatrix);
+		System.out.printf("%n%n");
+
+		return newMatrix;
+	}
 
 	/**
 	 * Determines if two characters are adjacent 
@@ -248,31 +487,39 @@ public class Main
 		}
 	}
 
+	/**
+	 * Rotate the shape (parameter) 90 degrees 
+	 * @param oneShape
+	 * 								= the 2D array representing a shape to be rotated 
+	 * @return
+	 * 				= the 90 degree rotation of oneShape
+	 */
 	public static ArrayList<ArrayList<Character>> rotate90Degrees(ArrayList<ArrayList<Character>> oneShape)
 	{
 		// rows of new matrix = columns of original matrix
-		    int rowsOfNewMatrix = oneShape.get(0).size(); 
-		 // cols of new matrix = rows of original matrix
-		    int colsOfNewMatrix = oneShape.size();  		   
-		    
-		    ArrayList<ArrayList<Character>> rotatedMatrix = new ArrayList<ArrayList<Character>>();
-		    
-		    
-		    for (int i = 0; i < colsOfNewMatrix; i++)
-		    {
-		    	for(int j = 0; j < rowsOfNewMatrix; j++)
-		    	{
-		    		if (i == 0)
-		    			rotatedMatrix.add(new ArrayList<Character>(Arrays.asList(new Character[colsOfNewMatrix])));
-				   // rotatedMatrix.get(j).add();
-		    		char c = oneShape.get(i).get(j);
-		    		rotatedMatrix.get(j).set(colsOfNewMatrix - (i + 1), c);
-		    	}
-		    }
-		
-		 
+		int rowsOfNewMatrix = oneShape.get(0).size(); 
+		// cols of new matrix = rows of original matrix
+		int colsOfNewMatrix = oneShape.size();  		   
+
+		ArrayList<ArrayList<Character>> rotatedMatrix = new ArrayList<ArrayList<Character>>();
+
+
+		for (int i = 0; i < colsOfNewMatrix; i++)
+		{
+			for(int j = 0; j < rowsOfNewMatrix; j++)
+			{
+				if (i == 0)
+					rotatedMatrix.add(new ArrayList<Character>(Arrays.asList(new Character[colsOfNewMatrix])));
+				// rotatedMatrix.get(j).add();
+				char c = oneShape.get(i).get(j);
+				rotatedMatrix.get(j).set(colsOfNewMatrix - (i + 1), c);
+			}
+		}
+
+
 		return rotatedMatrix;
 	}
+
 	/**
 	 * Generate all 8 permutations of the shape that we have found
 	 * @param oneShape = the 2d array of one shape from the text file
@@ -289,7 +536,7 @@ public class Main
 		permutations.add(oneShape);
 		// add 90 degree rotation of original
 		permutations.add(rotate90Degrees(oneShape));
-		
+
 		// reset temp
 		temp.clear();
 
@@ -314,7 +561,7 @@ public class Main
 
 		// add mirror x and reset temp
 		permutations.add((ArrayList<ArrayList<Character>>) temp.clone());
-		
+
 		// add 90 degree rotation of mirror x
 		permutations.add(rotate90Degrees(temp));
 		temp.clear();
@@ -341,7 +588,7 @@ public class Main
 
 		// add mirror y and reset temp
 		permutations.add((ArrayList<ArrayList<Character>>) temp.clone());
-		
+
 		// add 90 degree rotation of mirror y
 		permutations.add(rotate90Degrees(temp));
 		temp.clear();
@@ -372,27 +619,27 @@ public class Main
 
 		// add mirror x,y and reset temp
 		permutations.add((ArrayList<ArrayList<Character>>) temp.clone());
-		
+
 		// add 90 degree rotation of mirror x,y
 		permutations.add(rotate90Degrees(temp));
 		temp.clear();
 
 		// test
-				for (int i = 0; i < permutations.size(); i++)
-				{
-					writeToConsole(permutations.get(i));
-					System.out.printf("%n%n"); 
-				}
-				
+		for (int i = 0; i < permutations.size(); i++)
+		{
+			writeToConsole(permutations.get(i));
+			System.out.printf("%n%n"); 
+		}
+
 		return temp;
 	}
 
-	
+
 	public boolean isSameShape(ArrayList<ArrayList<Character>> oneShape)
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Write to output file
 	 * @param decodedShapes = the arrayList that holds what should be 
@@ -454,6 +701,8 @@ public class Main
 		ArrayList<ArrayList<Character>> encodedShapes = new ArrayList<ArrayList<Character>>();
 		char[] alphaPattern = new char[26];
 		int letter = 0;
+		ArrayList<Point> points = new ArrayList<Point>();
+		ArrayList<ArrayList<Character>> decodedShapeList = new ArrayList<ArrayList<Character>>();
 
 		// populates the char array with the alphabet chars
 		for (char ch = 'a'; ch <= 'z'; ++ch)
@@ -462,31 +711,38 @@ public class Main
 		// write the file contents to an Array List
 		populateArrList(encodedShapes);
 
-		//		// shape algorithm
-		//		for (int iRow = 0; iRow < encodedShapes.size(); iRow++)
-		//			for (int iCol = 0; iCol < encodedShapes.get(iRow).size(); iCol++)
-		//			{
-		//				if (encodedShapes.get(iRow).get(iCol) == '*')
-		//				{				
-		//					findAllAdjacent(encodedShapes, iRow, iCol, alphaPattern[letter]);
-		//					
-		//					// update letter for shape and reset the adjacent points
-		//					letter++;
-		//					
-		//					// reset the letter to 'a' because this is before we
-		//					// check for the permutations of the shapes
-		//					if (letter > 25)
-		//						letter = 0;
+
+		// shape algorithm
+		for (int iRow = 0; iRow < encodedShapes.size(); iRow++)
+			for (int iCol = 0; iCol < encodedShapes.get(iRow).size(); iCol++)
+			{
+				if (encodedShapes.get(iRow).get(iCol) == '*')
+				{	
+					//findAllAdjacent(encodedShapes, iRow, iCol, alphaPattern[letter]);
+					// beginning of testing grabShape does same as findAllAdjacent except it 
+					// saves the points of the shapes
+					grabShape(encodedShapes, points, iRow, iCol, alphaPattern[letter]);
+					decodedShapeList.addAll(createMatrix(points));
+					// update letter for shape and reset the adjacent points
+					letter++;
+
+					// reset the letter to 'a' because this is before we
+					// check for the permutations of the shapes
+					if (letter > 25)
+						letter = 0;
+
+					// reset points
+					points.clear();
+				}					
+			}
+
+		//		ArrayList<ArrayList<Character>> oneShape = new ArrayList<ArrayList<Character>>();
 		//
-		//				}					
-		//			}
-
-		ArrayList<ArrayList<Character>> oneShape = new ArrayList<ArrayList<Character>>();
-
-		for (int i = 0; i < 3; i++)
-			oneShape.add(encodedShapes.get(i));
-
-		generatePermutations(oneShape);
+		//
+		//		for (int i = 0; i < 3; i++)
+		//			oneShape.add(encodedShapes.get(i));
+		//
+		//		generatePermutations(oneShape);
 
 		// write to output file
 		// at this point encodedShapes is decoded
